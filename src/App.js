@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { Grid } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
 
-function App() {
+import { getPlanets } from './api';
+import { Header, PlanetsTable } from './components'; 
+import './App.scss';
+
+const {Column: GridColumn} = Grid;
+
+const App = () => {
+  const [planets, setPlanets] = useState([]);
+
+  useEffect(() => {
+    const getPlanetsAsync = async () => {
+      const {data: {results}} = await getPlanets();
+
+      setPlanets(results);
+    };
+
+    getPlanetsAsync();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <Grid centered>
+        <GridColumn className={'fourteen wide grid-table'}>
+          <PlanetsTable planets={planets}/>
+        </GridColumn>
+      </Grid>
     </div>
   );
 }
